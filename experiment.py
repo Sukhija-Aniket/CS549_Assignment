@@ -21,8 +21,8 @@ for i, server in enumerate(SERVERS):
         time.sleep(2)
     
     psswd = os.getenv('sudo_password')
-    total_time, hop_count, total_hops = traceroute_server(server, psswd)
-    traceroute_results[timestamp] = {'server_address': server, 'server_name': SERVER_NAMES[i] , 'total_time': total_time, 'hop_count': hop_count, 'total_hops': total_hops}
+    total_time, hop_count, total_hops, path_ips = traceroute_server(server, psswd)
+    traceroute_results[timestamp] = {'server_address': server, 'server_name': SERVER_NAMES[i] , 'total_time': total_time, 'hop_count': hop_count, 'total_hops': total_hops, 'path_ips': path_ips}
     time.sleep(5)
 
 with open(f'outputs/ping_test_results_{daytime}.json', 'w') as file:

@@ -74,18 +74,23 @@ def ping_server(server, count=10, size=56):
 
 def traceroute_server(server, psswd):
     try:
-        command = ['sudo','-S', 'traceroute','-T' , server] # For TCP Command
-        cmd1 = subprocess.Popen(['echo', psswd], stdout=subprocess.PIPE)
-        cmd2 = subprocess.Popen(command, stdin=cmd1.stdout, stdout=subprocess.PIPE)
-        output = cmd2.stdout.read().decode()
+        command = ['traceroute','-P','ICMP', server] # For TCP Command
+        cmd1 = subprocess.Popen(command, stdout=subprocess.PIPE)
+        output = cmd1.stdout.read().decode()
         lines = output.split('\n')
         total_time = 0.0
         hop_count = 0
         total_count = 0
+        ip_addresses = []
         for line in lines:
             # Finding all time values in the line using regex
             times = re.findall(r'(\d+\.\d+)\s*ms', line)
             uncounted = re.findall(r'\*\s\*\s\*', line)
+            ipaddress = re.search(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', line)
+            if ipaddress:
+                ip_addresses.append(ipaddress.group())
+            else:
+                ip_addresses.append('* * *')
             times = [float(time) for time in times]
             if len(times):
                 total_time += sum(times) / len(times) 
@@ -94,7 +99,7 @@ def traceroute_server(server, psswd):
             elif uncounted:
                 total_count += 1
 
-        return total_time, hop_count, total_count 
+        return total_time, hop_count, total_count, ip_addresses[:-1]
     except subprocess.CalledProcessError as e:
         print(f"Failed to traceroute {server}: {e}")
         return None
