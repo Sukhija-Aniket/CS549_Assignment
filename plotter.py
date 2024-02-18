@@ -1,7 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import json, os
-
 from constants import *
 from utils import *
 
@@ -28,7 +24,6 @@ def delay_througput_plots():
             mp_throughput[server_name][packet_size].append(throughput)
             
     for server_name, values in mp_delay.items():
-        print(values)
         plotfunc(DAYTIMES, values, 'Time of the Day', 'Delay', server_name, PACKET_SIZES)
     for server_name, values in mp_throughput.items():
         plotfunc(DAYTIMES, values, 'Time of the Day', 'Throughput', server_name, PACKET_SIZES)
@@ -48,6 +43,7 @@ def traceroute_plots():
             hop_count = values['hop_count']
             total_time = values['total_time']
             server_name = values['server_name']
+            save_map(values['path_ips'], server_name, DAYTIMES[i])
             
             if not mp_count.__contains__(server_name):
                 mp_count[server_name] = []
@@ -59,6 +55,5 @@ def traceroute_plots():
     for server_name in SERVER_NAMES:
         plotfunc2(mp_count[server_name], mp_time[server_name], server_name, width=0.8)
             
-# Main Program to Execute
 delay_througput_plots()
 traceroute_plots()

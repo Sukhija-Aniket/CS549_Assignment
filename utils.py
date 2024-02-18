@@ -2,6 +2,9 @@ from matplotlib import pyplot as plt
 import subprocess
 import re
 import numpy as np
+import json
+import requests
+import folium
 
 from constants import *
 
@@ -39,7 +42,6 @@ def plotfunc(xparam, data, xlabel, ylabel, title, legends, check=False):
     
 def plotfunc2(xvalues, yvalues, title, width=0.8):
     plt.figure()
-    print(xvalues, yvalues)
     plt.bar(xvalues, yvalues, width=width, alpha=0.3)
     plt.xticks(np.arange(min(xvalues)-1, max(xvalues)+2, 1))
     plt.xlabel("Hop Count")
@@ -117,3 +119,42 @@ def iperf_server(server, port=5201):
     except subprocess.CalledProcessError as e:
         print(f"Failed to measure throughput to {server}: {e}")
         return None
+
+def save_map(path_ips, server_name, day_time):
+    coordinates = {}
+    coordinates[0] = ['31.782758', '76.995263']
+    markers = []
+    for __, ip in enumerate(path_ips):
+        result = json.loads(requests.get('https://ipinfo.io/' + ip + '/json?token=9849b4f53692d1').text)
+        if 'loc' in result.keys():
+            coordinates[__] = result['loc'].split(',')
+            markers.append
+
+    
+    map_center = (30.0, 77.0)
+    my_map = folium.Map(location=map_center, zoom_start=2)
+
+    markers = []
+    for key, value in coordinates.items():
+        markers.append(folium.Marker(location=[float(value[0]), float(value[1])], popup=f'Point {key}'))
+
+
+    lines = folium.PolyLine(locations=[[float(coord[0]), float(coord[1])] for coord in coordinates.values()], color='blue')
+    lines.add_to(my_map)
+
+    # Add markers with numbers on top
+    for idx, marker in enumerate(markers):
+        folium.map.Marker(
+            location=marker.location,
+            icon=folium.DivIcon(
+                icon_size=(12, 12),
+                icon_anchor=(6, 6),
+                html=f'<div style="font-size: 10pt; color: black; background-color: white; border: 1px solid black; border-radius: 50%; text-align: center; line-height: 12pt;">{idx}</div>'
+            )
+        ).add_to(my_map)
+
+    for key, value in coordinates.items():
+        lon, lat = float(value[0]), float(value[1])
+        folium.Marker(location=[lon, lat], popup=f'Point {key}').add_to(my_map)
+    my_map.save(f'plots/map_{day_time}_{server_name}.html')        
+            
