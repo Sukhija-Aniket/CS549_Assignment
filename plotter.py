@@ -28,7 +28,7 @@ def delay_througput_plots():
     for server_name, values in mp_throughput.items():
         plotfunc(DAYTIMES, values, 'Time of the Day', 'Throughput', server_name, PACKET_SIZES)
     for server_name in SERVER_NAMES:
-        plotfunc(mp_delay[server_name], mp_throughput[server_name], 'Delay', 'Throughput', server_name, PACKET_SIZES, check=True)            
+        plotfunc(mp_throughput[server_name], mp_delay[server_name], 'Throughput', 'Delay', server_name, PACKET_SIZES, check=True)            
 
 def traceroute_plots():
     results = []

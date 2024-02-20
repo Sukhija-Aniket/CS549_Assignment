@@ -8,3 +8,4 @@ SERVER_NAMES = ['insite.iitmandi.ac.in', 'google.com', 'codeforces.com']
 SERVERS = ['10.8.1.4', '142.250.193.206', '172.67.68.254']
 
 # 10.7.0.254 - gateway
+

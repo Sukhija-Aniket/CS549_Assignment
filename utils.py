@@ -17,13 +17,15 @@ def getIndex(packet_size):
 def sort(x, y):
     for i in range(len(x) - 1):
         for j in range(i, len(x) -1):
-            if x[j] < x[j+1]:
+            if x[j] > x[j+1]:
                 temp = x[j]
                 x[j] = x[j+1]
                 x[j+1] = temp
                 temp = y[j]
                 y[j] = y[j+1]
                 y[j+1] = temp
+    print("x: ", x)
+    print("y: ", y)
     return x, y
 
 def plotfunc(xparam, data, xlabel, ylabel, title, legends, check=False):
@@ -31,9 +33,9 @@ def plotfunc(xparam, data, xlabel, ylabel, title, legends, check=False):
     for x in range(len(data)):
         if check:
             xparam[x], data[x] = sort(xparam[x], data[x])
-            plt.plot(xparam[x], data[x], label=f"size: {legends[x]} bytes")
+            plt.plot(xparam[x], data[x], label=f"size: {legends[x]} bytes", marker='x')
         else:
-            plt.plot(xparam, data[x], label=f"size: {legends[x]} bytes")
+            plt.plot(xparam, data[x], label=f"size: {legends[x]} bytes", marker='x')
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.legend()
@@ -76,9 +78,11 @@ def ping_server(server, count=10, size=56):
 
 def traceroute_server(server, psswd):
     try:
-        command = ['traceroute','-P','ICMP', server] # For TCP Command
-        cmd1 = subprocess.Popen(command, stdout=subprocess.PIPE)
-        output = cmd1.stdout.read().decode()
+        # command = ['sudo','-S', 'traceroute','-T' , server] # For TCP Packets
+        command = ['traceroute', server] # For UDP Packets
+        cmd1 = subprocess.Popen(['echo', psswd], stdout=subprocess.PIPE)
+        cmd2 = subprocess.Popen(command, stdin=cmd1.stdout, stdout=subprocess.PIPE)
+        output = cmd2.stdout.read().decode()
         lines = output.split('\n')
         total_time = 0.0
         hop_count = 0
