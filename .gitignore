@@ -5,3 +5,4 @@ __pycache__
 *.txt
 *.html
 *.pdf
+*.DS_Store
