@@ -36,7 +36,7 @@ def plotfunc(xparam, data, xlabel, ylabel, title, legends, check=False):
             plt.plot(xparam, data[x], label=f"size: {legends[x]} bytes", marker='x')
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.legend()
+    plt.legend(fontsize=6)
     plt.title(title) 
     plt.savefig(os.path.join(PLOT_PATH, f'{title}-{xlabel}-{ylabel}.png'))
     
