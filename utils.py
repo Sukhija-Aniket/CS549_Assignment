@@ -15,8 +15,8 @@ def getIndex(packet_size):
             return x
 
 def sort(x, y):
-    for i in range(len(x) - 1):
-        for j in range(i, len(x) -1):
+    for _ in range(len(x) - 1):
+        for j in range(0, len(x) -1):
             if x[j] > x[j+1]:
                 temp = x[j]
                 x[j] = x[j+1]
@@ -24,8 +24,6 @@ def sort(x, y):
                 temp = y[j]
                 y[j] = y[j+1]
                 y[j+1] = temp
-    print("x: ", x)
-    print("y: ", y)
     return x, y
 
 def plotfunc(xparam, data, xlabel, ylabel, title, legends, check=False):
